@@ -14,7 +14,47 @@ model Post {
   title String
   content String
   published Boolean @default(false)
-  author String
+  authorId Int
+  author User @relation(fields: [authorId], references: [id])
+  postCateogory PostCategory[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("posts")
+}
+model User{
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String
+  role UserRole @default(user)
+  profile Profile?
+  post Post[]
+  @@map("users")
+}
+
+model Profile {
+   id Int @id @default(autoincrement())
+   bio String?
+   userId Int @unique
+   user User @relation(fields: [userId], references: [id])
+   @@map("profiles")
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  bio String
+  userId Int
+  postCateogory PostCategory[]
+  @@map("categories")
+}
+
+model PostCategory {
+  postId Int
+  post Post @relation(fields: [postId], references: [id])
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id])
+  @@id([postId, categoryId])
+}
+enum UserRole {
+  user
+  admin
 }
