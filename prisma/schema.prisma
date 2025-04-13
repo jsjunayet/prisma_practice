@@ -6,10 +6,48 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  role UserRole
+  needPasswordChange Boolean
+  status UserStauts
+  admin Admin?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Admin {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  profilePhoto String?
+  contactNumber String
+  user User @relation(fields: [email], references: [email])
+
+  isDeleted Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("admins")
+}
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  DOCTOR
+  PATIENT
+}
+enum UserStauts {
+  ACTIVE
+  BLOCKED
 }
