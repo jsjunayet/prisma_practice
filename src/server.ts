@@ -7,3 +7,4 @@ async function main() {
         console.log(`Health Care Backend Listening ${port}`)
     })
 }
+main()

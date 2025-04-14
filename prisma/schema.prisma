@@ -19,8 +19,8 @@ model User {
   email String @unique
   password String
   role UserRole
-  needPasswordChange Boolean
-  status UserStauts
+  needPasswordChange Boolean @default(true)
+  status UserStauts @default(ACTIVE)
   admin Admin?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -36,12 +36,12 @@ model Admin {
   contactNumber String
   user User @relation(fields: [email], references: [email])
 
-  isDeleted Boolean
+  isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("admins")
 }
-enum UserRole {
+ enum UserRole {
   SUPER_ADMIN
   ADMIN
   DOCTOR

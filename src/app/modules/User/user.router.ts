@@ -1,9 +1,6 @@
 import { Request, Response, Router } from "express";
+import { userController } from "./user.controller";
 
 const router = Router()
-router.get('/', (req:Request, res:Response)=>{
-    res.send({
-        message:"this is health care"
-    })
-})
+router.post('/', userController.userPost)
 export const userRoutes = router  
