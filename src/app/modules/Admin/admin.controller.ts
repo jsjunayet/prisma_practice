@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import pick from '../../../shared/pick';
 import { adminFilterableFields } from './admin.constand';
@@ -8,7 +8,7 @@ import { sendResponse } from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 
 
-const getAllFromDB = async (req: Request, res: Response) => {
+const getAllFromDB = async (req: Request, res: Response, next:NextFunction) => {
     try {
         // console.log(req.query)
         const filters = pick(req.query, adminFilterableFields);
@@ -24,14 +24,10 @@ const getAllFromDB = async (req: Request, res: Response) => {
            })
     }
     catch (err:any) {
-        res.status(httpStatus.BAD_REQUEST).json({
-            success: false,
-            message: err?.name || "Something went wrong",
-            error: err
-        })
+       next(err)
     }
 }
-const getByIdFromDB = async(req: Request, res: Response)=>{
+const getByIdFromDB = async(req: Request, res: Response, next:NextFunction)=>{
     const {id}= req.params
     try {
         const result = await AdminService.getByIdFromDB(id)
@@ -43,14 +39,10 @@ const getByIdFromDB = async(req: Request, res: Response)=>{
            })
     }
     catch (err:any) {
-        res.status(500).json({
-            success: false,
-            message: err?.name || "Something went wrong",
-            error: err
-        })
+      next(err)
     }
 }
-const updateAdminFromDB = async(req: Request, res: Response)=>{
+const updateAdminFromDB = async(req: Request, res: Response, next:NextFunction)=>{
     const {id}= req.params
     try {
         const result = await AdminService.updateAdminFromDB(id, req.body)
@@ -62,30 +54,22 @@ const updateAdminFromDB = async(req: Request, res: Response)=>{
            })
     }
     catch (err:any) {
-        res.status(500).json({
-            success: false,
-            message: err?.name || "Something went wrong",
-            error: err
-        })
+      next(err)
     }
 }
-const deletedAdminFromDB = async(req: Request, res: Response)=>{
+const deletedAdminFromDB = async(req: Request, res: Response, next:NextFunction)=>{
     const {id}= req.params
     try {
         const result = await AdminService.deletedAdminFromDB(id)
        sendResponse(res,{
-        statusCode:,
+        statusCode:httpStatus.OK, 
         success:true,
         message:"success full deleted",
         data:result
        })
     }
     catch (err:any) {
-        res.status(500).json({
-            success: false,
-            message: err?.name || "Something went wrong",
-            error: err
-        })
+      next(err)
     }
 }
 
