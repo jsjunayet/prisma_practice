@@ -1,30 +1,62 @@
-import { Prisma, PrismaClient } from "@prisma/client"
+import { Prisma } from "@prisma/client";
+import { paginationHelper } from "../../../helpars/paginationHelper";
+import prisma from "../../../shared/prisma";
+import { adminSearchAbleFields } from "./admin.constand";
 
-const prisma = new PrismaClient()
 
-const getalldataDB = async(query:any)=>{
-    const andCondions:Prisma.AdminWhereInput[] = [];
-    const adminSearchAbleFileds =['name', 'email']
-    if(query){
+const getAllFromDB = async (params: any, options: any) => {
+    const { page, limit, skip } = paginationHelper.calculatePagination(options);
+    const { searchTerm, ...filterData } = params;
+    const andCondions: Prisma.AdminWhereInput[] = [];
+
+    //console.log(filterData);
+    if (params.searchTerm) {
         andCondions.push({
-            OR:adminSearchAbleFileds.map(filed=>({
-                
-                    [filed]:{
-                        contains:query,
-                        mode:'insensitive'
-                    }
-    
-        }))
+            OR: adminSearchAbleFields.map(field => ({
+                [field]: {
+                    contains: params.searchTerm,
+                    mode: 'insensitive'
+                }
+            }))
+        })
+    };
+
+    if (Object.keys(filterData).length > 0) {
+        andCondions.push({
+            AND: Object.keys(filterData).map(key => ({
+                [key]: {
+                    equals: filterData[key]
+                }
+            }))
         })
     }
-    const whereConditions:Prisma.AdminWhereInput ={AND : andCondions}
-    const result = await prisma.admin.findMany(
-        {
-            where:whereConditions
+
+    //console.dir(andCondions, { depth: 'inifinity' })
+    const whereConditons: Prisma.AdminWhereInput = { AND: andCondions }
+
+    const result = await prisma.admin.findMany({
+        where: whereConditons,
+        skip,
+        take: limit,
+        orderBy: options.sortBy && options.sortOrder ? {
+            [options.sortBy]: options.sortOrder
+        } : {
+            createdAt: 'desc'
         }
-    )
-    return result
+    });
+    const total = await prisma.admin.count({
+        where:whereConditons
+    })
+    return {
+        meta:{ 
+            page,
+            limit,
+            total
+        },
+        data:result
+    };
 }
-export const adminService={
-    getalldataDB
+
+export const AdminService = {
+    getAllFromDB
 }

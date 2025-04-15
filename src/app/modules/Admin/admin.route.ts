@@ -1,6 +1,9 @@
 import { Router } from "express";
-import { adminController } from "./Admin.controller";
+import { AdminController } from "./admin.controller";
+
 
 const router = Router()
-router.get("/",adminController.getalldataDB)
+router.get("/",AdminController.getAllFromDB)
+router.get("/:id",AdminController.getAllFromDB)
+
 export const adminRoutes = router
