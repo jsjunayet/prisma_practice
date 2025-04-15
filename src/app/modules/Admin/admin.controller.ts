@@ -3,8 +3,9 @@ import { Request, Response } from 'express';
 import pick from '../../../shared/pick';
 import { adminFilterableFields } from './admin.constand';
 import { AdminService } from './admin.service';
+import { sendResponse } from '../../../shared/sendResponse';
 
-
+import httpStatus from 'http-status';
 
 
 const getAllFromDB = async (req: Request, res: Response) => {
@@ -14,15 +15,16 @@ const getAllFromDB = async (req: Request, res: Response) => {
         const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder'])
         console.log(options)
         const result = await AdminService.getAllFromDB(filters, options)
-        res.status(200).json({
-            success: true,
-            message: "Admin data fetched!",
+        sendResponse(res,{
+            statusCode:httpStatus.OK,
+            success:true,
             meta:result.meta,
-            data: result.data
-        })
+            message:"All data retrive",
+            data:result
+           })
     }
     catch (err:any) {
-        res.status(500).json({
+        res.status(httpStatus.BAD_REQUEST).json({
             success: false,
             message: err?.name || "Something went wrong",
             error: err
@@ -33,11 +35,12 @@ const getByIdFromDB = async(req: Request, res: Response)=>{
     const {id}= req.params
     try {
         const result = await AdminService.getByIdFromDB(id)
-        res.status(200).json({
-            success: true,
-            message: "Admin signle data fetched!",
-            data: result
-        })
+        sendResponse(res,{
+           statusCode:httpStatus.OK,
+            success:true,
+            message:"single data get",
+            data:result
+           })
     }
     catch (err:any) {
         res.status(500).json({
@@ -51,11 +54,12 @@ const updateAdminFromDB = async(req: Request, res: Response)=>{
     const {id}= req.params
     try {
         const result = await AdminService.updateAdminFromDB(id, req.body)
-        res.status(200).json({
-            success: true,
-            message: "Admin update data fetched!",
-            data: result
-        })
+        sendResponse(res,{
+           statusCode:httpStatus.OK,
+            success:true,
+            message:"successfull update",
+            data:result
+           })
     }
     catch (err:any) {
         res.status(500).json({
@@ -69,11 +73,12 @@ const deletedAdminFromDB = async(req: Request, res: Response)=>{
     const {id}= req.params
     try {
         const result = await AdminService.deletedAdminFromDB(id)
-        res.status(200).json({
-            success: true,
-            message: "Admin deleted data fetched!",
-            data: result
-        })
+       sendResponse(res,{
+        statusCode:,
+        success:true,
+        message:"success full deleted",
+        data:result
+       })
     }
     catch (err:any) {
         res.status(500).json({
@@ -83,6 +88,7 @@ const deletedAdminFromDB = async(req: Request, res: Response)=>{
         })
     }
 }
+
 export const AdminController = {
     getAllFromDB,
     getByIdFromDB,
