@@ -53,7 +53,25 @@ const updateAdminFromDB = async(req: Request, res: Response)=>{
         const result = await AdminService.updateAdminFromDB(id, req.body)
         res.status(200).json({
             success: true,
-            message: "Admin signle data fetched!",
+            message: "Admin update data fetched!",
+            data: result
+        })
+    }
+    catch (err:any) {
+        res.status(500).json({
+            success: false,
+            message: err?.name || "Something went wrong",
+            error: err
+        })
+    }
+}
+const deletedAdminFromDB = async(req: Request, res: Response)=>{
+    const {id}= req.params
+    try {
+        const result = await AdminService.deletedAdminFromDB(id)
+        res.status(200).json({
+            success: true,
+            message: "Admin deleted data fetched!",
             data: result
         })
     }
@@ -68,5 +86,6 @@ const updateAdminFromDB = async(req: Request, res: Response)=>{
 export const AdminController = {
     getAllFromDB,
     getByIdFromDB,
-    updateAdminFromDB
+    updateAdminFromDB,
+    deletedAdminFromDB
 }
