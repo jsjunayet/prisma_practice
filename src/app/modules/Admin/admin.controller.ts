@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import pick from '../../../shared/pick';
 import { adminFilterableFields } from './admin.constand';
@@ -6,10 +6,10 @@ import { AdminService } from './admin.service';
 import { sendResponse } from '../../../shared/sendResponse';
 
 import httpStatus from 'http-status';
+import { catchAsync } from '../../../shared/catchAsync';
 
 
-const getAllFromDB = async (req: Request, res: Response, next:NextFunction) => {
-    try {
+const getAllFromDB = catchAsync(async(req: Request, res: Response) => {
         // console.log(req.query)
         const filters = pick(req.query, adminFilterableFields);
         const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder'])
@@ -22,11 +22,8 @@ const getAllFromDB = async (req: Request, res: Response, next:NextFunction) => {
             message:"All data retrive",
             data:result
            })
-    }
-    catch (err:any) {
-       next(err)
-    }
-}
+  
+})
 const getByIdFromDB = async(req: Request, res: Response, next:NextFunction)=>{
     const {id}= req.params
     try {
