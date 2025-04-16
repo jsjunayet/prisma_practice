@@ -1,6 +1,7 @@
 import express from 'express'
 import { userRoutes } from '../modules/User/user.router'
 import { adminRoutes } from '../modules/Admin/admin.route'
+import { authRoutes } from '../Auth/auth.route'
 const router = express.Router()
 const moduleRoute = [
     {
@@ -10,6 +11,10 @@ const moduleRoute = [
     {
         path:'/admin',
         route:adminRoutes
+    },
+    {
+        path:'/auth',
+        route: authRoutes
     },
 ]
  moduleRoute.forEach(route=> router.use(route.path, route.route))
