@@ -6,6 +6,7 @@ import { Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { UserStauts } from "@prisma/client";
 import { jwtHelpers } from "../../../helpars/jwtHelpers";
+import config from "../../../config";
 
 const loginUser = async (payload: {
     email: string,
