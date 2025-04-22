@@ -54,7 +54,7 @@ const changePassword = catchAsync(async(req: Request & {user?:any}, res: Respons
   
   })
   const forgetPassword = catchAsync(async(req: Request & {user?:any}, res: Response) => {
-    const email = req.user.email
+    const email = req.body.email
     const result = await AuthServices.forgetPassword(email)
     sendResponse(res,{
         statusCode:httpStatus.OK,

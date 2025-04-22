@@ -20,7 +20,6 @@ router.post(
           AuthController.changePassword)
           
           router.post("/forgetPassword",
-            auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
              AuthController.forgetPassword)
 
 

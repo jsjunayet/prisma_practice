@@ -8,6 +8,7 @@ import { Admin, User, UserStauts } from "@prisma/client";
 import { jwtHelpers } from "../../../helpars/jwtHelpers";
 import config from "../../../config";
 import ApiError from "../../Errors/AppError";
+import { sendMail } from "../../../shared/SendMail";
 
 const loginUser = async (payload: {
     email: string,
@@ -121,6 +122,16 @@ const forgetPassword = async (email:string) => {
         config.jwt.expires_in as string
     );
     const resetPaswordLink = `http://localhost:5173?email=${userData.email}&token=${resPasswordToken}`
+    sendMail(userData.email, 
+        `
+        <div>
+        <p>Dear user<p>
+        <p> Your password reset link 
+        <a href=${resetPaswordLink}>
+        <button>Reset Password</button>
+        </a>
+        </div>
+        `)
 
 
 };
