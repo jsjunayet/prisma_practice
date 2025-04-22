@@ -121,7 +121,7 @@ const forgetPassword = async (email:string) => {
         config.jwt.jwt_secret as Secret,
         config.jwt.expires_in as string
     );
-    const resetPaswordLink = `http://localhost:5173?email=${userData.email}&token=${resPasswordToken}`
+    const resetPaswordLink = `http://localhost:5000?email=${userData.email}&token=${resPasswordToken}`
     sendMail(userData.email, 
         `
         <div>
@@ -135,10 +135,25 @@ const forgetPassword = async (email:string) => {
 
 
 };
+const resetPassword=async(token:string, payload:{email:string, password:string})=>{
+    console.log(payload);
+const userData = await prisma.user.findUniqueOrThrow({
+    where:{
+        email:payload.email,
+        status:UserStauts.ACTIVE
+    }
+})
+const isValided = jwtHelpers.verifyToken(token,config.jwt.jwt_secret as Secret)
+if(!isValided){
+    throw new ApiError(httpStatus.FORBIDDEN, "forbidden Password")
+}
+
+}
 export const AuthServices ={
     refreshToken,
     loginUser,
     changePassword,
-    forgetPassword
+    forgetPassword,
+    resetPassword
 
 }
