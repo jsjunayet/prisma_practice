@@ -108,5 +108,5 @@ export const AdminService = {
     getAllFromDB,
     getByIdFromDB,
     updateAdminFromDB,
-    deletedAdminFromDB
+    deletedAdminFromDB,
 }

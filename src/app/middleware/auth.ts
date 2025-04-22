@@ -6,7 +6,7 @@ import ApiError from "../Errors/AppError"
 import httpStatus from 'http-status'
 
 export const auth =(...roles:string[])=>{
-    return async (req:Request, res:Response, next:NextFunction)=>{
+    return async (req:Request & {user?:any}, res:Response, next:NextFunction)=>{
         try{
             const token = req.headers.authorization
             if(!token){
@@ -14,6 +14,7 @@ export const auth =(...roles:string[])=>{
             }
             const verifiedToken = jwtHelpers.verifyToken(token, config.jwt.jwt_secret as Secret)
             console.log(verifiedToken);
+            req.user = verifiedToken
             if(roles.length && !roles.includes(verifiedToken.role)){
                 throw new ApiError(httpStatus.FORBIDDEN,"You are not authorized")
             }

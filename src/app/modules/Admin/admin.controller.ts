@@ -70,9 +70,10 @@ const deletedAdminFromDB = async(req: Request, res: Response, next:NextFunction)
     }
 }
 
+
 export const AdminController = {
     getAllFromDB,
     getByIdFromDB,
     updateAdminFromDB,
-    deletedAdminFromDB
+    deletedAdminFromDB,
 }
