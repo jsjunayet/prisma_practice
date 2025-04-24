@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from "path";
 import { v2 as cloudinary } from 'cloudinary';
-
+import fs from 'fs';
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, path.join(process.cwd(), 'upload'))
@@ -26,8 +26,10 @@ const uploadImage = async (file:any) => {
             file.path,
             { public_id: file.originalname }
         );
+        fs.unlinkSync(file.path)
         return result
     } catch (error) {
+        fs.unlinkSync(file.path)
         console.error('Upload failed:', error);
     }
 };
