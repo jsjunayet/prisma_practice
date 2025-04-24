@@ -18,6 +18,25 @@ const userPost = async(req:Request, res:Response)=>{
     })
    }
 }
+
+const createDoctor = async(req:Request, res:Response)=>{
+
+    try{
+     const result = await userService.createDoctor(req)
+     res.status(200).send({
+         success:true,
+         message:"Doctor created Admin",
+         data:result
+     })
+    }catch(err:any){
+     res.status(200).send({
+         success:true,
+         message: err.name ||"something went wrong!",
+         error:err
+     })
+    }
+ }
 export const userController= {
-    userPost
+    userPost,
+    createDoctor
 }

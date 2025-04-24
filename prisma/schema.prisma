@@ -53,7 +53,7 @@ model Doctor {
   experience Int @default(0)
   gender  Gender
   appointmentFee Int
-  qulificaiton String
+  qualification String
   desgination String
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
