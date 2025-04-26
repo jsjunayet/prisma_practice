@@ -51,12 +51,14 @@ const createDoctor = async (req: any) => {
     }
 
     const result = await prisma.$transaction(async (transactionClient) => {
-    const userDates =    await transactionClient.user.create({
+    const userDates = await transactionClient.user.create({
             data: userData
         });
-        console.log(data.doctor);
+        console.log(data.doctor, userDates);
         const createdDoctorData = await transactionClient.doctor.create({
-            data: data.doctor
+            data: {
+                ...data.doctor // এতে অবশ্যই email থাকতে হবে, কারণ ওটাই relation-এর ফিল্ড
+              }
         });
 console.log(createdDoctorData);
         return createdDoctorData;
